@@ -17,7 +17,7 @@
 	<br>
 	
 	<h2>툴</h2>
-	<p><a href="/tool/bbcodehighliter/bbcodehighliter.html">BBCodeHighliter</a></p>
+	<p><a href="/tool/bbcodehighlighter/bbcodehighlighter.html">BBCodeHighlighter</a></p>
 	
 	<br>
 	<br>
