@@ -16,6 +16,7 @@
 	
 	<h2>게임</h2>
 	<p><a href="/game/captain/index.html">기관장님(Game Captain)</a></p>
+	<p><a href="http://ddoc.kr:18080/game/vivria">비브리아(Vivria)</a></p>
 	
 	<br>
 	
