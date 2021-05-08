@@ -35,7 +35,7 @@ function convert2vba_button_onclick() {
 	
 		document.getElementById("output_area").innerText = inputText;
 		document.getElementById("result_area").innerHTML = inputText;
-	   ` ` 
+		
 	} catch (e) {
 		alert(e);
 	}
@@ -97,7 +97,7 @@ function replaceAll(_str, _old, _new) {
 	}
 	
 	return result;
-}` `
+}
 
 
 function highlightForJava(_str) {
@@ -165,6 +165,7 @@ function highlightForJava(_str) {
 		}
 		
 		if (find(_str, i, "\r\n")) {
+			// IE11
 			if (bComment) {
 				bComment = false;
 				i++;
@@ -178,10 +179,22 @@ function highlightForJava(_str) {
 				result += "<br>";
 				continue;
 			}
+		} else if (find(_str, i, "\n")) {
+			// Chrome
+			if (bComment) {
+				bComment = false;
+				
+				result += "</span><br>";
+				continue;
+				
+			} else {
+				result += "<br>";
+				continue;
+			}
 		}
 		
 		
-		if (find(_str, i, "/*")) {
+		if (!bDoubleQuote && find(_str, i, "/*")) {
 			bMultiComment = true;
 			i++;
 			
@@ -212,9 +225,8 @@ function highlightForJava(_str) {
 			continue;
 		}
 		
-		// [TODO] 자바 따옴표 계산은 좀 더 엄밀해져야 한다.
 		// 쌍따옴표 앞의 연속된 역슬래시의 개수가 홀수이면 가짜따옴표다.
-		if (find(_str, i, "\"") && !find(_str, i-1, "\\")) {
+		if (findConsideringBackslash(_str, i, "\"")) {
 			if (!bDoubleQuote) {
 				bDoubleQuote = true;
 				result += "<span style=\"color: blue;\">\"";
@@ -256,6 +268,9 @@ function highlightForJavaScript(_str) {
 	
 	var reservedList = [];
 	reservedList[reservedList.length] = "var";
+	reservedList[reservedList.length] = "const";
+	reservedList[reservedList.length] = "let";
+	
 	reservedList[reservedList.length] = "function";
 //	reservedList[reservedList.length] = "private";
 //	reservedList[reservedList.length] = "public";
@@ -310,6 +325,7 @@ function highlightForJavaScript(_str) {
 		}
 		
 		if (find(_str, i, "\r\n")) {
+			// IE11
 			if (bComment) {
 				bComment = false;
 				i++;
@@ -323,10 +339,22 @@ function highlightForJavaScript(_str) {
 				result += "<br>";
 				continue;
 			}
+		} else if (find(_str, i, "\n")) {
+			// Chrome
+			if (bComment) {
+				bComment = false;
+				
+				result += "</span><br>";
+				continue;
+				
+			} else {
+				result += "<br>";
+				continue;
+			}
 		}
 		
 		
-		if (find(_str, i, "/*")) {
+		if (!bDoubleQuote && find(_str, i, "/*")) {
 			bMultiComment = true;
 			i++;
 			
@@ -357,9 +385,8 @@ function highlightForJavaScript(_str) {
 			continue;
 		}
 		
-		// [TODO] 자바 따옴표 계산은 좀 더 엄밀해져야 한다.
 		// 쌍따옴표 앞의 연속된 역슬래시의 개수가 홀수이면 가짜따옴표다.
-		if (find(_str, i, "\"") && !find(_str, i-1, "\\")) {
+		if (findConsideringBackslash(_str, i, "\"")) {
 			if (!bDoubleQuote) {
 				bDoubleQuote = true;
 				result += "<span style=\"color: blue;\">\"";
@@ -391,54 +418,6 @@ function highlightForJavaScript(_str) {
 	}
 	
 	return result;
-}
-
-
-function find(_str, _idx, _text, _bSeperate) {
-	if (_str == null || _str.length == 0) {
-		return false;
-	}
-	
-	if (_text == null || _text.length == 0) {
-		return false;
-	}
-	
-	if (substring(_str, _idx, _idx + _text.length) == _text) {
-		if (_bSeperate != null && _bSeperate == true) {
-			var before = substring(_str, _idx - 1, _idx);
-			var after = substring(_str, _idx + _text.length, _idx + _text.length + 1);
-			
-			if ((before.length == 0 || before == " " || before == "\t" || before == ")" || before == "\r" || before == "\n" || before == ";") &&
-				(after.length == 0 || after == " " || after == "\t" || after == "(" || after == "\r" || after == "\n" || after == ";")) {
-				return true;
-			} else {
-				return false;
-			}
-			
-		} else {
-			return true;
-		}
-	}
-	
-	return false;
-}
-
-
-function substring(_str, _b, _e) {
-	if (_str == null || _str.length == 0) {
-		return "";
-	}
-	
-	if (_b < 0) {
-		_b = 0;
-	}
-	
-	var len = _str.length;
-	if (_e > len) {
-		_e = len;
-	}
-	
-	return _str.substring(_b, _e);
 }
 
 
@@ -495,6 +474,7 @@ function highlightForVBA(_str) {
 		}
 		
 		if (find(_str, i, "\r\n")) {
+			// IE11
 			if (bComment) {
 				bComment = false;
 				i++;
@@ -505,6 +485,18 @@ function highlightForVBA(_str) {
 			} else {
 				i++;
 				
+				result += "<br>";
+				continue;
+			}
+		} else if (find(_str, i, "\n")) {
+			// Chrome
+			if (bComment) {
+				bComment = false;
+				
+				result += "</span><br>";
+				continue;
+				
+			} else {
 				result += "<br>";
 				continue;
 			}
@@ -550,4 +542,89 @@ function highlightForVBA(_str) {
 	}
 	
 	return result;
+}
+
+
+// _str 문자열의 _idx 위치에 _text 문자가 위치하는지 찾기
+function find(_str, _idx, _text, _bSeperate) {
+	if (_str == null || _str.length == 0) {
+		return false;
+	}
+	
+	if (_text == null || _text.length == 0) {
+		return false;
+	}
+	
+	if (substring(_str, _idx, _idx + _text.length) == _text) {
+		if (_bSeperate != null && _bSeperate == true) {
+			var before = substring(_str, _idx - 1, _idx);
+			var after = substring(_str, _idx + _text.length, _idx + _text.length + 1);
+			
+			if ((before.length == 0 || before == " " || before == "\t" || before == ")" || before == "\r" || before == "\n" || before == ";") &&
+				(after.length == 0 || after == " " || after == "\t" || after == "(" || after == "\r" || after == "\n" || after == ";")) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		} else {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+
+// 역슬래시를 고려해서 _str 문자열의 _idx 위치에 _text 문자가 위치하는지 찾기
+// 찾은 _text 문자 앞에 역슬래시 개수가 홀수인 경우 false를 리턴하기
+// 역슬래시로 escape 처리를 하는 쌍따옴표 등 찾기에 적합한 함수임
+function findConsideringBackslash(_str, _idx, _text) {
+	if (_str == null || _str.length == 0) {
+		return false;
+	}
+	
+	if (_text == null || _text.length == 0) {
+		return false;
+	}
+	
+	if (substring(_str, _idx, _idx + _text.length) == _text) {
+		
+		var serialUnslashCount = 0;
+		for (var i=_idx-1; i>=0; i--) {
+			if (substring(_str, i, i+1) == "\\") {
+				serialUnslashCount++;
+			} else {
+				break;
+			}
+		}
+		
+		if (serialUnslashCount == 0 || serialUnslashCount % 2 == 0) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	} else {
+		return false;
+	}
+}
+
+
+// 오류가 발생하지 않는 서브스트링
+function substring(_str, _b, _e) {
+	if (_str == null || _str.length == 0) {
+		return "";
+	}
+	
+	if (_b < 0) {
+		_b = 0;
+	}
+	
+	var len = _str.length;
+	if (_e > len) {
+		_e = len;
+	}
+	
+	return _str.substring(_b, _e);
 }
