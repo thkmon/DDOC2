@@ -109,6 +109,9 @@ function highlightForJava(_str) {
 	reservedList[reservedList.length] = "package";
 	reservedList[reservedList.length] = "import";
 	
+	reservedList[reservedList.length] = "class";
+	reservedList[reservedList.length] = "interface";
+	
 	reservedList[reservedList.length] = "private";
 	reservedList[reservedList.length] = "public";
 	
