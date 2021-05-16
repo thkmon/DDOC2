@@ -10,23 +10,10 @@
     <link href="/css/base.css" rel="stylesheet">
 </head>
 <body>
-	<h1>DDOC.kr</h1>
-	<p>Hello DDOC!</p>
+	<p>권한이 없습니다.</p>
+	<br>
+	<p><a href="/login">로그인</a></p>
 	<br>
 	<br>
-	
-	<h2>게임</h2>
-	<p><a href="/game/captain/index.html">기관장님(Game Captain)</a></p>
-	<p><a href="http://ddoc.kr:18080/game/vivria">비브리아(Vivria)</a></p>
-	
-	<br>
-	
-	<h2>툴</h2>
-	<p><a href="/tool/bbcodehighlighter/bbcodehighlighter.html">BBCodeHighlighter</a></p>
-	<p><a href="/tool/blogparser">BBBlogParser</a></p>
-	
-	<br>
-	<br>
-	@thkmon a.k.a. bb_
 </body>
 </html>
