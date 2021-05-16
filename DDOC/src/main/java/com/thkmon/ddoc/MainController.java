@@ -1,19 +1,18 @@
 package com.thkmon.ddoc;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class MainController {
 	
 	// 문법 : @RequestMapping(value = "{변수명:정규식}")
-	
 	@RequestMapping(value = "/")
 	public String index() {
 		return "index.jsp";
 	}
 	
+	/*
 	@RequestMapping(value = "/{path:[a-z]*}")
 	public String handleLowerCase(@PathVariable String path) {
 		System.out.println("소문자");
@@ -31,4 +30,5 @@ public class MainController {
 		System.out.println("숫자");
 		return "index.jsp";
 	}
+	*/
 }
