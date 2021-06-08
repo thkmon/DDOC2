@@ -19,17 +19,40 @@ public class FolderUtil {
 			filePath = filePath.trim();
 		}
 
-		if (filePath.indexOf("/") > -1) {
-			filePath = filePath.replace("/", "\\");
-		}
+		// 필요한 디렉토리 만들기
+		int lastSlashPos = - 1;
+		
+		if (File.separator != null && File.separator.equals("\\")) {
+			// 슬래시를 역슬래시로 치환
+			if (filePath.indexOf("/") > -1) {
+				filePath = filePath.replace("/", "\\");
+			}
 
-		while (filePath.indexOf("\\\\") > -1) {
-			filePath = filePath.replace("\\\\", "\\");
+			// 연속된 역슬래시 제거
+			while (filePath.indexOf("\\\\") > -1) {
+				filePath = filePath.replace("\\\\", "\\");
+			}
+			
+			// 마지막 역슬래시 위치 가져오기
+			lastSlashPos = filePath.lastIndexOf("\\");
+			
+		} else {
+			// 역슬래시를 슬래시로 치환
+			if (filePath.indexOf("\\") > -1) {
+				filePath = filePath.replace("\\", "/");
+			}
+
+			// 연속된 슬래시 제거
+			while (filePath.indexOf("//") > -1) {
+				filePath = filePath.replace("//", "/");
+			}
+			
+			// 마지막 슬래시 위치 가져오기
+			lastSlashPos = filePath.lastIndexOf("/");
 		}
+		
 
 		// 필요한 디렉토리 만들기
-		int lastSlashPos = filePath.lastIndexOf("\\");
-
 		if (lastSlashPos > -1) {
 			File d = new File(filePath.substring(0, lastSlashPos));
 			if (!d.exists()) {

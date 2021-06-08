@@ -39,9 +39,15 @@ public class LoginService {
 	 * @param session
 	 * @return
 	 */
-	public String getNaverLoginUrl(HttpSession session) {
+	public String getNaverLoginUrl(HttpSession session, HttpServletRequest request) {
 		String clientId = naverClientID; // 애플리케이션 클라이언트 아이디값";
-		String redirectURI = StringUtil.encodeUTF8("http://localhost:8080/loginCallback");
+		String redirectURI = "";
+		if (request.getRequestURL().indexOf("localhost") > -1) {
+			redirectURI = StringUtil.encodeUTF8("http://localhost:8080/loginCallback");
+		} else {
+			redirectURI = StringUtil.encodeUTF8("http://ddoc.kr/loginCallback");
+		}
+		
 		SecureRandom random = new SecureRandom();
 		String state = new BigInteger(130, random).toString();
 

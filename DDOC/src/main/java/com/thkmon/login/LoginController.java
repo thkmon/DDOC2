@@ -15,8 +15,8 @@ public class LoginController {
 	
 	
 	@RequestMapping(value = "/login")
-	public String login(HttpSession session) {
-		String loginUrl = loginService.getNaverLoginUrl(session);
+	public String login(HttpSession session, HttpServletRequest request) {
+		String loginUrl = loginService.getNaverLoginUrl(session, request);
 		return "redirect:" + loginUrl;
 	}
 	

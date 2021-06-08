@@ -462,7 +462,7 @@ public class BlogParserMapper {
 			throw new Exception("The folder does not exists. (" + parentFolderObj.getAbsolutePath() + ")");
 		}
 		
-		File dir = new File(parentFolderPath + postNo + "\\");
+		File dir = new File(parentFolderPath + File.separator + postNo + File.separator);
 		if (dir.exists()) {
 			FolderUtil.deleteFolder(dir.getAbsolutePath());
 		}
@@ -509,7 +509,7 @@ public class BlogParserMapper {
 						fileExtOnly = "png";
 					}
 					
-					String savePath = parentFolderPath + postNo + "\\" + String.format("%04d", i + 1) + "." + fileExtOnly;
+					String savePath = parentFolderPath + File.separator + postNo + File.separator + String.format("%04d", i + 1) + "." + fileExtOnly;
 					String newImgSrc = "/imgs/" + postNo + "/" + String.format("%04d", i + 1) + "." + fileExtOnly;
 					
 					boolean idDownloaded = false;
@@ -548,7 +548,7 @@ public class BlogParserMapper {
 			throw new Exception("The folder does not exists. (" + parentFolderObj.getAbsolutePath() + ")");
 		}
 		
-		File dir = new File(parentFolderPath + postNo + "\\");
+		File dir = new File(parentFolderPath + File.separator + postNo + File.separator);
 		if (!dir.exists()) {
 			return false;
 		}

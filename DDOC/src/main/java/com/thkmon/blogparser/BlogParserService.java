@@ -81,10 +81,12 @@ public class BlogParserService {
 
 				String logNo = JsonUtil.getString(oneJsonObj, "logNo");
 				String title = JsonUtil.getString(oneJsonObj, "title");
-				if (title != null && title.indexOf("%") > -1) {
-					title = URLDecoder.decode(title, "UTF-8");
+				if (title != null) {
+					if (title.indexOf("%") > -1 || title.indexOf("+") > -1) {
+						title = URLDecoder.decode(title, "UTF-8");
+					}
 				}
-
+				
 				String categoryNo = JsonUtil.getString(oneJsonObj, "categoryNo");
 				// String parentCategoryNo = JsonUtil.getString(oneJsonObj, "parentCategoryNo");
 				// String sourceCode = JsonUtil.getString(oneJsonObj, "sourceCode");
