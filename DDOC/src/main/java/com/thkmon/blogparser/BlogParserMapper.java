@@ -94,8 +94,8 @@ public class BlogParserMapper {
 				Element postViewArea = postViewAreas.get(0);
 				strHtml = postViewArea.html();
 			} else {
-				postViewAreas = doc.select(".se_component_wrap");
-				Element postViewArea = postViewAreas.get(1);
+				postViewAreas = doc.select(".se-main-container");
+				Element postViewArea = postViewAreas.get(0);
 				strHtml = postViewArea.html();
 			}
 			
