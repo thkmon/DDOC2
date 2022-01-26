@@ -65,6 +65,7 @@ function initGame() {
 	g_sys.print("모선의 에너지탄 발사는 X 키로 하시면 됩니다.");
 	g_sys.print("무운을 빕니다.");
 	g_sys.print("(아, 잠시 대기하시려면 P 키를 누르시면 됩니다.)");
+	g_sys.print(" ");
 
 	var commentDiv = "<div id='commentDiv' style='width: " + g_width + "px; position: absolute; left: 0; top: 660px; height: 20px;'></div>";
 	$("body").append(commentDiv);
@@ -105,14 +106,17 @@ function doLoop() {
 		}
 	}
 
+	// 최상단 또는 최하단 벽에 부딪쳤는지 여부
+	var isWallClash = false;
+	
 	// 주인공 캐릭터 이동
 	if (g_goDown) {
 		g_unit.man.addY(3);
 
 		if (g_unit.man.py + g_unit.man.ph > g_height) {
 			g_goDown = !g_goDown;
-			g_sys.print("기관장님, 모선이 흔들리고 있습니다. 운전에 유의해주세요.");
-			minusScore();
+			isWallClash = true;
+			// minusScore();
 		}
 
 	} else {
@@ -120,8 +124,25 @@ function doLoop() {
 
 		if (g_unit.man.py < 0) {
 			g_goDown = !g_goDown;
-			g_sys.print("기관장님, 모선이 흔들리고 있습니다. 똑바로 몰란 말이야!");
-			minusScore();
+			isWallClash = true;
+			// minusScore();
+		}
+	}
+	
+	if (isWallClash && !g_gameOver) {
+		if (g_msgNumber1 == 3) {
+			g_sys.print("혹시 멀미약 갖고 계신가요?");
+		} else if (g_msgNumber1 == 2) {
+			g_sys.print("모선의 움직임이 불안정합니다. 똑바로 몰란 말이야!");
+		} else if (g_msgNumber1 == 1) {
+			g_sys.print("핸들 꽉 잡으세요!");
+		} else {
+			g_sys.print("기관장님, 모선이 흔들리고 있습니다. 운전에 유의해주세요.");
+		}
+		
+		g_msgNumber1++
+		if (g_msgNumber1 == 4) {
+			g_msgNumber1 = 0;
 		}
 	}
 
@@ -218,17 +239,21 @@ function initEnemy() {
 
 	// 적의 hp 설정
 	g_unit.enemy = new Unit("enemy", g_width - enemy_width, enemy_y, enemy_width, enemy_height);
-	var enemy_hp = Math.floor(Math.random() * 80);
+	var enemy_hp = Math.floor(Math.random() * 30);
 	g_unit.enemy.hp = enemy_hp;
 
-	// 점수를 hp만큼 배분
-	g_unit.enemy.score = g_unit.enemy.hp;
+	// 점수를 hp만큼 배분 => 점수는 무조건 적 하나당 10점으로 설정
+	// g_unit.enemy.score = g_unit.enemy.hp;
+	g_unit.enemy.score = 10;
 
 	// 점수 초기화 (점수 표시를 위해 hp에 0을 더함.)
 	g_unit.enemy.addHp(0);
 }
 
+// 양 사이드에 부딪쳐도 점수 마이너스하지 않도록 주석처리
+/*
 function minusScore() {
 	g_score = parseInt(g_score, 10) - 1;
 	$("#scoreDiv").text("score : " + g_score + " / " + g_scoreGoal);
 }
+*/

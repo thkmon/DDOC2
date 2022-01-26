@@ -101,6 +101,8 @@ Unit.prototype.remove = function remove() {
 	if (this.removed) {
 		return -1;
 	}
+	
+	this.removed = true;
 
 	// $(this.id).eq(0).hide();
 	$(this.id).eq(0).fadeOut('slow');
@@ -109,8 +111,6 @@ Unit.prototype.remove = function remove() {
 	// 점수 증가
 	g_score = parseInt(g_score, 10) + parseInt(this.score, 10);
 	$("#scoreDiv").text("score : " + g_score + " / " + g_scoreGoal);
-
-	this.removed = true;
 }
 
 // 이거 쓰면 느려..
@@ -148,28 +148,44 @@ Unit.prototype.addHp = function addHp(_i) {
 	$(this.id).eq(0).text(this.hp);
 
 	if (g_unit.enemy.hp <= 0) {
+		// 삭제시 무시
+		if (this.removed) {
+			return false;
+		}
+		
 		this.remove();
 
-		// if (g_score > 1000) {
-		if (g_score > g_scoreGoal) {
-			g_sys.print("Game Clear!");
-			g_sys.print("기관장님, 마지막 적 함선을 폭파시켰다는 소식입니다. 축하드립니다!");
-			g_sys.print("2016년 8월 31일까지 아마추어 게임제작 대회가 열립니다. 주변 분들에게 홍보해주시는 것은 어떨까요?");
-			g_sys.print("똥똥배게임제작대회( ~ 2016년 8월 31일) : 누구나 참여 가능!");
+		if (g_score >= g_scoreGoal) {
+			
+			// 게임 종료 시 한 번만 출력하도록 처리
+			if (!g_gameOver) {
+				g_sys.print(" ");
+				g_sys.print("Game Clear!");
+				g_sys.print("기관장님, 마지막 적 함선을 폭파시켰다는 소식입니다. 축하드립니다!");
+				g_sys.print("~ 플레이해주셔서 감사합니다 ~");
+				// g_sys.print("2016년 8월 31일까지 아마추어 게임제작 대회가 열립니다. 주변 분들에게 홍보해주시는 것은 어떨까요?");
+				// g_sys.print("똥똥배게임제작대회( ~ 2016년 8월 31일) : 누구나 참여 가능!");
+			}
+			
 			g_gameOver = true;
 			g_gameClear = true;
+			
 			return true;
 		}
 
-		var a = Math.floor(Math.random() * 3);
-		if (a == 3) {
-			g_sys.print("잘했어요! 적 함선 하나를 폭파시켰습니다. 그런데 싸움은 끝이 나지 않는군요...");
-		} else if (a == 2) {
-			g_sys.print("나이스샷! 적 함선 하나를 폭파시켰습니다. 한 마리 더 부탁해요!");
-		} else if (a == 1) {
-			g_sys.print("인테그랄! 적 함선 하나를 폭파시켰습니다. 궤멸시켜 버립시다.");
+		if (g_msgNumber2 == 3) {
+			g_sys.print("녀석을 우주 안드로메다로 보내버리셨군요. 잔인하십니다.");
+		} else if (g_msgNumber2 == 2) {
+			g_sys.print("한 마리 해치웠습니다. 한 마리 더 부탁해요!");
+		} else if (g_msgNumber2 == 1) {
+			g_sys.print("적이 흔적도 없이 사라져버렸네요. 궤멸시켜 버립시다.");
 		} else {
-			g_sys.print("멋져부러! 적 함선 하나를 폭파시켰습니다. 바로 이 느낌이죠.");
+			g_sys.print("적 함선 하나를 폭파시켰습니다. 바로 이 느낌이죠.");
+		}
+		
+		g_msgNumber2++
+		if (g_msgNumber2 == 4) {
+			g_msgNumber2 = 0;
 		}
 	}
 }
