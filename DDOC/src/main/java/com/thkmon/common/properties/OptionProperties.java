@@ -6,7 +6,7 @@ import com.thkmon.common.util.PropertiesUtil;
 import com.thkmon.common.util.StringUtil;
 
 public class OptionProperties {
-	public static final HashMap<String, String> optionProperties = PropertiesUtil.readPropertiesFile("/home/ec2-user/config/option.properties");
+	public static final HashMap<String, String> optionProperties = PropertiesUtil.readPropertiesFile("/home/ddoc/config/option.properties");
 	
 	public static final String DB_URL = optionProperties.get("db_url");
 	public static final int DB_PORT = StringUtil.parseInt(optionProperties.get("db_port"));
